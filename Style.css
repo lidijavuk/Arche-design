@@ -355,6 +355,14 @@
     flex-shrink: 0;
   }
   
+  svg.contact-icon {
+  width: 13.5px;
+  height: 13.5px;
+  color: var(--accent);
+  text-align: center;
+  flex-shrink: 0;
+  }
+
   /* ===========================
      FOOTER
   =========================== */
