@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arhe Design – Arhitektonski Studio</title>
+  <link rel="stylesheet" href="Style.css"/>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <header>
+    <div class="logo">ARHE<span>DESIGN</span></div>
+    <nav>
+      <a href="#design">Dizajn</a>
+      <a href="#construction">Konstrukcija</a>
+      <a href="#projects">Projekti</a>
+      <a href="#team">Tim</a>
+      <a href="#contact">Kontakt</a>
+    </nav>
+    <button class="nav-toggle" aria-label="Meni">&#9776;</button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-inner">
+      <p class="eyebrow">Crna Gora</p>
+      <h1>Arhitektura koja<br><em>spaja estetiku</em><br>i konstrukciju</h1>
+      <p class="hero-sub">Studio za arhitektonsko projektovanje, dizajn enterijera i konstruktivne projekte.</p>
+      <a href="#projects" class="btn">Pogledajte projekte</a>
+    </div>
+    <div class="hero-lines" aria-hidden="true">
+      <span></span><span></span><span></span>
+    </div>
+  </section>
+
+  <!-- DESIGN -->
+  <section id="design" class="section reveal">
+    <div class="section-inner">
+      <p class="label">Dizajn</p>
+      <h2>Prostor koji diše</h2>
+      <p>Fokusirani na savremeni minimalizam, prirodne materijale i funkcionalnost prostora. Svaki projekat počinje pažljivim slušanjem klijenta i dubokim razumijevanjem mjesta.</p>
+    </div>
+  </section>
+
+  <!-- CONSTRUCTION -->
+  <section id="construction" class="section alt reveal">
+    <div class="section-inner">
+      <p class="label">Konstrukcija</p>
+      <h2>Sigurna osnova za svaku ideju</h2>
+      <p>Statika, tehnička dokumentacija i optimizacija konstrukcija za sigurnu i efikasnu gradnju. Preciznost i transparentnost u svakoj fazi projekta.</p>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="section reveal">
+    <div class="section-inner">
+      <p class="label">Projekti</p>
+      <h2>Odabrani radovi</h2>
+      <div class="grid">
+        <a href="projekat-01.html" class="card">
+            <span>
+                <div class="person-img-wrap">
+                    <img src="images/slika1.1.jpg" alt="slika-1.1">
+                </div>
+                Projekat 01
+            </span>
+        </a>
+        <a href="projekat-02.html" class="card">
+            <span>
+                <div class="person-img-wrap">
+                    <img src="images/slika2.1.jpg" alt="slika-2.1">
+                </div>
+                Projekat 02
+            </span>
+        </a>
+        <a href="projekat-03.html" class="card">
+          <span>
+            <div class="person-img-wrap">
+                    <img src="images/slika3.1.jpeg" alt="slika-3.1">
+                </div>
+            Projekat 03
+          </span>
+        </a>
+        <a href="projekat-04.html" class="card">
+          <span>
+            <div class="person-img-wrap">
+                    <img src="images/slika4.1.jpeg" alt="slika-4.1">
+                </div>
+            Projekat 04</span>
+          </a>
+        <a href="projekat-05.html" class="card"><span>Projekat 05</span></a>
+        <a href="projekat-06.html" class="card"><span>Projekat 06</span></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section id="team" class="section alt reveal">
+    <div class="section-inner">
+      <p class="label">Tim</p>
+      <h2>Ko stoji iza studija</h2>
+      <div class="team">
+        <div class="person">
+          <div class="person-img-wrap">
+            <img src="images/irma.jpg" alt="Irma Šehović">
+          </div>
+          <div class="person-info">
+            <h3>Irma Šehović</h3>
+            <p class="role">Spec. Sci Arh</p>
+          </div>
+        </div>
+        <div class="person">
+          <div class="person-img-wrap">
+            <img src="images/danijela.jpg" alt="Danijela Crvenica">
+          </div>
+          <div class="person-info">
+            <h3>Danijela Crvenica</h3>
+            <p class="role">Spec. Sci Arh</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="section reveal">
+    <div class="section-inner">
+      <p class="label">Kontakt</p>
+      <h2>Počnimo razgovor</h2>
+      <div class="contact-box">
+        <a href="mailto:arhedesign7@gmail.com" class="contact-row">
+          <span class="contact-icon">✉</span>
+          <span>arhedesign7@gmail.com</span>
+        </a>
+        <div class="contact-row">
+          <span class="contact-icon">◎</span>
+          <span>Crna Gora</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 Arhe Design. Sva prava zadržana.</p>
+  </footer>
+
+  <script>
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.1 });
+    reveals.forEach(el => observer.observe(el));
+
+    // Mobile nav toggle
+    const toggle = document.querySelector('.nav-toggle');
+    const nav = document.querySelector('nav');
+    toggle.addEventListener('click', () => nav.classList.toggle('open'));
+    nav.querySelectorAll('a').forEach(a => a.addEventListener('click', () => nav.classList.remove('open')));
+  </script>
+
+</body>
+</html>
