@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Projekat 09 – Arhe Design</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --cream:     #f4ede4;
+      --cream-alt: #ede3d8;
+      --sand:      #d6c9b8;
+      --ink:       #1e1a17;
+      --ink-soft:  #5a5049;
+      --accent:    #8c6e52;
+      --border:    #ddd0c3;
+    }
+
+    body {
+      background: var(--cream);
+      color: var(--ink);
+      font-family: "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ---- HEADER ---- */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 60px;
+      background: rgba(244, 237, 228, 0.92);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo { font-size: 15px; font-weight: 700; letter-spacing: 3px; text-decoration: none; color: var(--ink); }
+    .logo span { color: var(--accent); }
+    .back-link {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; color: var(--ink-soft);
+      font-size: 13px; letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    .back-link:hover { color: var(--accent); }
+    .back-link::before { content: '←'; font-size: 16px; }
+
+    /* ---- HERO ---- */
+    .project-hero {
+      padding: 70px 60px 50px;
+      border-bottom: 1px solid var(--border);
+    }
+    .project-hero .eyebrow {
+      font-size: 11px; letter-spacing: 2.5px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+    }
+    .project-hero h1 {
+      font-family: Georgia, serif; font-weight: 400;
+      font-size: clamp(28px, 5vw, 54px); line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .project-meta {
+      display: flex; flex-wrap: wrap; gap: 32px;
+      margin-top: 24px;
+    }
+    .meta-item { display: flex; flex-direction: column; gap: 4px; }
+    .meta-label { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+    .meta-value { font-size: 14px; color: var(--ink-soft); }
+
+    .project-desc {
+      max-width: 620px; color: var(--ink-soft);
+      font-size: 16px; line-height: 1.7; margin-top: 28px;
+    }
+
+    /* ---- GALLERY ---- */
+    .gallery-section { padding: 60px 60px 80px; }
+    .gallery-section h2 {
+      font-family: Georgia, serif; font-weight: 400;
+      font-size: 22px; margin-bottom: 28px; color: var(--ink-soft);
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    /* First image spans 2 columns as featured */
+    .gallery-item:first-child {
+      grid-column: span 2;
+    }
+
+    .gallery-item {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+      border-radius: 4px;
+      cursor: pointer;
+      background: var(--sand);
+      position: relative;
+    }
+    .gallery-item:first-child { aspect-ratio: 16/9; }
+
+    .gallery-item img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+    .gallery-item:hover img { transform: scale(1.04); }
+
+    /* Overlay hint */
+    .gallery-item::after {
+      content: '⊕';
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%) scale(0.7);
+      font-size: 32px; color: white;
+      opacity: 0; transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .gallery-item:hover::after { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+    /* Placeholder when no image */
+    .gallery-item .placeholder {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 8px;
+      color: var(--ink-soft);
+      font-size: 13px; letter-spacing: 1px;
+      background: var(--sand);
+    }
+    .gallery-item .placeholder span { font-size: 28px; opacity: 0.4; }
+
+    /* ---- LIGHTBOX ---- */
+    .lightbox {
+      display: none;
+      position: fixed; inset: 0; z-index: 1000;
+      background: rgba(20, 16, 14, 0.94);
+      align-items: center; justify-content: center;
+    }
+    .lightbox.active { display: flex; }
+
+    .lightbox img {
+      max-width: 90vw; max-height: 88vh;
+      object-fit: contain;
+      border-radius: 3px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+    }
+
+    .lb-close {
+      position: absolute; top: 24px; right: 30px;
+      font-size: 28px; color: white; cursor: pointer;
+      background: none; border: none; line-height: 1;
+      opacity: 0.7; transition: opacity 0.2s;
+    }
+    .lb-close:hover { opacity: 1; }
+
+    .lb-prev, .lb-next {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      font-size: 22px; color: white; cursor: pointer;
+      background: rgba(255,255,255,0.1); border: none;
+      width: 48px; height: 48px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; backdrop-filter: blur(4px);
+    }
+    .lb-prev { left: 24px; }
+    .lb-next { right: 24px; }
+    .lb-prev:hover, .lb-next:hover { background: rgba(255,255,255,0.2); }
+
+    .lb-counter {
+      position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%);
+      font-size: 12px; color: rgba(255,255,255,0.5); letter-spacing: 1.5px;
+    }
+
+    /* ---- FOOTER ---- */
+    footer {
+      text-align: center; padding: 28px;
+      font-size: 12px; color: var(--ink-soft);
+      border-top: 1px solid var(--border);
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      header { padding: 16px 20px; }
+      .project-hero { padding: 40px 20px 32px; }
+      .gallery-section { padding: 40px 20px 60px; }
+      .gallery-item:first-child { grid-column: span 1; aspect-ratio: 4/3; }
+      .gallery { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .lb-prev { left: 10px; }
+      .lb-next { right: 10px; }
+    }
+    @media (max-width: 480px) {
+      .gallery { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="logo">ARHE<span>DESIGN</span></a>
+    <a href="index.html#projects" class="back-link">Nazad na projekte</a>
+  </header>
+
+  <!-- PROJECT INFO -->
+  <div class="project-hero">
+    <p class="eyebrow">Projekat 09</p>
+    <h1>Naziv projekta ovdje</h1>
+    <p class="project-desc">
+      Kratak opis projekta — lokacija, koncepcija, materijali, specifičnosti. 
+      Ovdje dodajte pravu priču iza projekta. Šta je bio izazov, kako ste ga riješili.
+    </p>
+    <div class="project-meta">
+      <div class="meta-item">
+        <span class="meta-label">Godina</span>
+        <span class="meta-value">2024</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Lokacija</span>
+        <span class="meta-value">Bar, Crna Gora</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Površina</span>
+        <span class="meta-value">240 m²</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Tip</span>
+        <span class="meta-value">Stambeni objekat</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="gallery-section">
+    <h2>Fotografije projekta</h2>
+
+    <!--
+      KAKO DODATI SLIKE:
+      Zamijenite "placeholder" div-ove sa:
+        <div class="gallery-item">
+          <img src="projekat-01/slika-1.jpg" alt="Opis slike">
+        </div>
+
+      Preporučena organizacija fajlova:
+        projekat-01/
+          slika-1.jpg
+          slika-2.jpg
+          ...
+    -->
+
+    <div class="gallery" id="gallery">
+
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.1.jpg" alt="Slika 9.1">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.2.jpg" alt="Slika 9.2">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.3.jpg" alt="Slika 9.3">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.4.jpg" alt="Slika 9.4">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.5.jpg" alt="Slika 9.5">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.6.jpg" alt="Slika 9.6">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.7.jpg" alt="Slika 9.7">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.8.jpg" alt="Slika 9.8">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.9.jpg" alt="Slika 9.9">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.10.jpg" alt="Slika 9.10">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.11.jpg" alt="Slika 9.11">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.12.jpg" alt="Slika 9.12">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.13.jpg" alt="Slika 9.13">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.14.jpg" alt="Slika 9.14">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.15.png" alt="Slika 9.15">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.16.png" alt="Slika 9.16">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.17.png" alt="Slika 9.17">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.18.png" alt="Slika 9.18">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.19.png" alt="Slika 9.19">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.20.png" alt="Slika 9.20">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.21.jpg" alt="Slika 9.21">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.22.jpg" alt="Slika 9.22">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.23.jpg" alt="Slika 9.23">
+      </div>
+      <div class="gallery-item">
+        <img src="images/projekat-9/slika9.24.jpg" alt="Slika 9.24">
+      </div>
+
+
+    </div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Pregled slike">
+    <button class="lb-close" id="lb-close" aria-label="Zatvori">✕</button>
+    <button class="lb-prev" id="lb-prev" aria-label="Prethodna">‹</button>
+    <img id="lb-img" src="" alt=""/>
+    <button class="lb-next" id="lb-next" aria-label="Sljedeća">›</button>
+    <p class="lb-counter" id="lb-counter"></p>
+  </div>
+
+  <footer>
+    <p>© 2026 Arhe Design. Sva prava zadržana.</p>
+  </footer>
+
+  <script>
+    const gallery   = document.getElementById('gallery');
+    const lightbox  = document.getElementById('lightbox');
+    const lbImg     = document.getElementById('lb-img');
+    const lbCounter = document.getElementById('lb-counter');
+
+    // Collect only items that have a real <img> (not placeholders)
+    let images = [];
+    let current = 0;
+
+    function buildImageList() {
+      images = [...gallery.querySelectorAll('.gallery-item img')];
+    }
+
+    function openLightbox(index) {
+      buildImageList();
+      if (!images.length) return;
+      current = index;
+      showImage(current);
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    function showImage(index) {
+      lbImg.src = images[index].src;
+      lbImg.alt = images[index].alt;
+      lbCounter.textContent = `${index + 1} / ${images.length}`;
+    }
+
+    function prev() { current = (current - 1 + images.length) % images.length; showImage(current); }
+    function next() { current = (current + 1) % images.length; showImage(current); }
+
+    // Attach click to gallery items
+    gallery.addEventListener('click', e => {
+      const item = e.target.closest('.gallery-item');
+      if (!item) return;
+      buildImageList();
+      const img = item.querySelector('img');
+      if (!img) return;
+      const idx = images.indexOf(img);
+      if (idx !== -1) openLightbox(idx);
+    });
+
+    document.getElementById('lb-close').addEventListener('click', closeLightbox);
+    document.getElementById('lb-prev').addEventListener('click', prev);
+    document.getElementById('lb-next').addEventListener('click', next);
+
+    // Click outside image closes
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) closeLightbox(); });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'ArrowLeft')  prev();
+      if (e.key === 'ArrowRight') next();
+      if (e.key === 'Escape')     closeLightbox();
+    });
+  </script>
+
+</body>
+</html>
